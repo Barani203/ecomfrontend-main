@@ -56,9 +56,11 @@ const ProductEditScreen = ({ match, history }) => {
 
   const uploadFileHandler = async (e) =>{
     const file = e.target.files[0]
+     if(!file)return
     const formData = new FormData()
-    formData.append('image', file)
-    formData.append("upload_preset", "oevdavnz");
+    formData.append('file', file)
+    formData.append("upload_preset", "ecommerce");
+    formData.append("cloud_name","db72yvohy")
     setUploading(true)
 
     try {
@@ -68,9 +70,11 @@ const ProductEditScreen = ({ match, history }) => {
           }
         }
         
-      const {data} = await axios.post('https://ecombackend-main.onrender.com/api/upload', formData, config)
-      
-      setImage(data)
+      const data = await axios.post(`https://api.cloudinary.com/v1_1/db72yvohy/image/upload`, formData,config)
+      // const urlData= await data.json()
+      // console.log(data.url)
+      setImage(data.data.secure_url)
+      console.log(data)
       setUploading(false)
 
     } catch (error) {
@@ -79,28 +83,35 @@ const ProductEditScreen = ({ match, history }) => {
     }
   }
 
-  // async function uploadFileHandler() {
+  // const uploadFileHandler = async (e)=>{
+  //   const file = e.target.files[0]
+  //   if(!file)return
   //   const data = new FormData();
-  //   data.append("file", image);
-  //   data.append("upload_preset", "oevdavnz");
-  //   try {
+  //   data.append("file", file);
+  //  data.append("upload_preset", "ecommerce");
+  //  data.append("cloud_name","db72yvohy")
+    
   //     setUploading(true);
-  //     let res = await fetch(
-  //       "https://api.cloudinary.com/v1_1/db72yvohy/image/upload",
-  //       {
-  //         method: "post",
-  //         body: data,
-  //       }
-  //     );
+  //     let res = await axios.post(`https://api.cloudinary.com/v1_1/db72yvohy/image/upload`,data)
+  //     // let res = await fetch(
+  //     //   "https://api.cloudinary.com/v1_1/db72yvohy/image/upload",
+  //     //   {
+  //     //     method: "post",
+  //     //     body: data,
+  //     //   }
+  //     // );
   //     // CLOUDINARY_URL=cloudinary://568597417153877:do_Aat3-nHIlC0nYB2WXb-krL6g@db72yvohy
-  //     const urlData = await res.json();
+
+  //     // const urlData = await res.json();
+  //     // console.log(urlData)
+  //     setImage(res)
   //     setUploading(false);
-  //     return urlData.url;
-  //   } catch (error) {
-  //     setUploading(false);
-  //     console.log(error);
-  //   }
+
   // }
+
+
+
+
   const submitHandler = (e) => {
     e.preventDefault()
     dispatch(
